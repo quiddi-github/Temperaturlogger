@@ -2,16 +2,18 @@
 #include <WiFiClient.h> 
 #include <ESP8266WebServer.h>
 #include "DHT.h"
+int i = 0;
+int resetPin = 16;
 
 // Uncomment whatever type you're using!
 #define DHTPIN 2      //DHT an Pin 2 konfigurieren
-#define DHTTYPE DHT11   // DHT 11 
+#define DHTTYPE DHT22   // DHT 11 
 // init DHT; 3rd parameter = 16 works for ESP8266@80MHz
 DHT dht(DHTPIN, DHTTYPE,16); 
 
 /* Set these to your desired credentials. */
 const char *ssid = "Newton";  //ENTER YOUR WIFI SETTINGS <<<<<<<<<
-const char *password = "Passwort";
+const char *password = "Password";
 
 //Web address to read from
 const char *host = "api.thingspeak.com";
@@ -21,9 +23,10 @@ String apiKey = "API-KEY";  //ENTER YOUR API KEY <<<<<<<<<<<
 //=======================================================================
 
 void setup() {
+  //digitalWrite(resetPin, HIGH);
   delay(1000);
+  //pinMode(resetPin, OUTPUT); 
   Serial.begin(115200);
-
   WiFi.mode(WIFI_STA);        //This line hides the viewing of ESP as wifi hotspot
   //WiFi.mode(WIFI_AP_STA);   //Both hotspot and client are enabled
   //WiFi.mode(WIFI_AP);       //Only Access point
@@ -45,6 +48,7 @@ void setup() {
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());  //IP address assigned to your ESP
 }
+void(* resetFunc) (void) = 0; //declare reset function @ address 0
 
 //=======================================================================
 //                    Main Program Loop
@@ -56,7 +60,7 @@ Serial.println("Temperatur");
 Serial.println(t);
 Serial.println("Luftfeuchtigkeit");
 Serial.println(h);
-
+i++;
 
 
   
@@ -102,10 +106,17 @@ Serial.println(h);
      Serial.println("Request timeout..");
  }
 
- delay(5000);  //Read Web Page every 5 seconds
 //---------------------------------------------------------------------
 
  
 delay(60000);
+/*if(i>2){ //bei i=60 Reset durchführen
+  i=0;
+  digitalWrite(resetPin, LOW);
+  delay(50);
+  digitalWrite(resetPin, HIGH);
+  //resetFunc();  //call reset
+  delay(500);
+  }*/
 }
 //=======================================================================
