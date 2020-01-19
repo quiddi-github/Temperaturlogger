@@ -1,3 +1,6 @@
+19.1.2019
+Reset after 10 minutes added.
+
 17.2.2019
 
 A temperature and humity logger which saves the data to ThingSpeak.
